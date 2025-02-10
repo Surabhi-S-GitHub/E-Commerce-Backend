@@ -109,11 +109,7 @@ public class ProductServiceImplementation implements ProductService {
                 .orElseThrow(() -> new ProductException("Product Not found with id-" + productId));
     }
 
-    @Override
-    public List<Product> findProductByCategory(String category) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findProductByCategory'");
-    }
+   
 
     @Override
     public Page<Product> getAllProducts(String category, List<String> colors, List<String> sizes, Integer minPrice,
@@ -140,5 +136,17 @@ public class ProductServiceImplementation implements ProductService {
         
                 List<Product> pageContent = products.subList(startIndex, endIndex);
                 return new PageImpl<>(pageContent, pageable, products.size());
+    }
+
+    @Override
+    public List<Product> findProductById(String category) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'findProductById'");
+    }
+
+    @Override
+    public Product findProductById(Long productId) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'findProductById'");
     }
 }

@@ -17,7 +17,7 @@ public interface ProductService {
 
     Product findProduct(Long productId) throws ProductException;
 
-    List<Product> findProductByCategory(String category);
+    List<Product> findProductById(String category);
 
     Page<Product> getAllProducts(
         String category, 
@@ -31,4 +31,6 @@ public interface ProductService {
         Integer pageNumber, 
         Integer pageSize
     );
+
+    Product findProductById(Long productId);
 }
