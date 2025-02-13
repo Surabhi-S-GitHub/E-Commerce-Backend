@@ -8,9 +8,10 @@ import ecommerce.project.ecommerce.com.surabhi.model.User;
 import ecommerce.project.ecommerce.com.surabhi.request.RatingRequest;
 
 
-public interface RatingService {
-    public Rating createRating(RatingRequest req,User user) throws ProductException;
-
-    public List<Rating> getProductsRating(Long productId);
+public interface RatingServices {
+	
+	public Rating createRating(RatingRequest req,User user) throws ProductException;
+	
+	public List<Rating> getProductsRating(Long productId);
 
 }

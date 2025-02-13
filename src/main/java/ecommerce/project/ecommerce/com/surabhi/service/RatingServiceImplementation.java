@@ -13,34 +13,36 @@ import ecommerce.project.ecommerce.com.surabhi.repository.RatingRepository;
 import ecommerce.project.ecommerce.com.surabhi.request.RatingRequest;
 
 @Service
-public class RatingServiceImplementation implements RatingService {
+public class RatingServiceImplementation implements RatingServices{
+	
+	private RatingRepository ratingRepository;
+	private ProductService productService;
+	
+	public RatingServiceImplementation(RatingRepository ratingRepository,ProductService productService) {
+		this.ratingRepository=ratingRepository;
+		this.productService=productService;
+	}
 
-    private final RatingRepository ratingRepository;
-    private final ProductService productService;
+	@Override
+	public Rating createRating(RatingRequest req,User user) throws ProductException {
+		
+		Product product=productService.findProductById(req.getProductId());
+		
+		Rating rating=new Rating();
+		rating.setProduct(product);
+		rating.setUser(user);
+		rating.setRating(req.getRating());
+		rating.setCreatedAt(LocalDateTime.now());
+		
+		return ratingRepository.save(rating);
+	}
 
-    // Constructor-based Dependency Injection
-    public RatingServiceImplementation(RatingRepository ratingRepository, ProductService productService) {
-        this.ratingRepository = ratingRepository;
-        this.productService = productService;
-    }
+	@Override
+	public List<Rating> getProductsRating(Long productId) {
+		// TODO Auto-generated method stub
+		return ratingRepository.getAllProductsRating(productId);
+	}
+	
+	
 
-    @Override
-    public Rating createRating(RatingRequest req, User user) throws ProductException {
-        Product product = productService.findProduct(req.getProductId());
-
-        Rating rating = new Rating();
-        rating.setProduct(product);
-        rating.setUser(user);
-        rating.setRating(req.getRating());
-        rating.setCreatedAt(LocalDateTime.now());
-
-        return ratingRepository.save(rating);
-    }
-
-    @Override
-    public List<Rating> getProductsRating(Long productId) {
-        return ratingRepository.getAllProductsRating(productId);
-    }
-
-    
 }

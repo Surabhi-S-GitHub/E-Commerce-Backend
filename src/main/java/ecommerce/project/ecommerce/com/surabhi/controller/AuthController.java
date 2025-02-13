@@ -1,8 +1,5 @@
 package ecommerce.project.ecommerce.com.surabhi.controller;
 
-import java.util.ArrayList;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -16,89 +13,108 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ecommerce.project.ecommerce.com.surabhi.Exception.UserException;
-import ecommerce.project.ecommerce.com.surabhi.config.JwtProvider;
-import ecommerce.project.ecommerce.com.surabhi.model.User;
+import ecommerce.project.ecommerce.com.surabhi.config.JwtTokenProvider;
 import ecommerce.project.ecommerce.com.surabhi.repository.UserRepository;
+import ecommerce.project.ecommerce.com.surabhi.Exception.UserException;
+import ecommerce.project.ecommerce.com.surabhi.model.Cart;
+import ecommerce.project.ecommerce.com.surabhi.model.User;
 import ecommerce.project.ecommerce.com.surabhi.request.LoginRequest;
 import ecommerce.project.ecommerce.com.surabhi.response.AuthResponse;
-import ecommerce.project.ecommerce.com.surabhi.service.CustomerUserServiceImplementation;
+import ecommerce.project.ecommerce.com.surabhi.service.CartService;
+import ecommerce.project.ecommerce.com.surabhi.service.CustomUserDetails;
+import ecommerce.project.ecommerce.com.surabhi.user.domain.UserRole;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
-    
-    private final UserRepository userRepository;
-    private final JwtProvider jwtProvider;
-    private final PasswordEncoder passwordEncoder;
-    private final CustomerUserServiceImplementation customerUserService;
 
-    public AuthController(UserRepository userRepository, CustomerUserServiceImplementation customerUserService,
-                          PasswordEncoder passwordEncoder, JwtProvider jwtProvider) {
-        this.userRepository = userRepository;
-        this.customerUserService = customerUserService;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtProvider = jwtProvider;
-    }
+	private UserRepository userRepository;
+	private PasswordEncoder passwordEncoder;
+	private JwtTokenProvider jwtTokenProvider;
+	private CustomUserDetails customUserDetails;
+	private CartService cartService;
+	
+	public AuthController(UserRepository userRepository,PasswordEncoder passwordEncoder,JwtTokenProvider jwtTokenProvider,CustomUserDetails customUserDetails,CartService cartService) {
+		this.userRepository=userRepository;
+		this.passwordEncoder=passwordEncoder;
+		this.jwtTokenProvider=jwtTokenProvider;
+		this.customUserDetails=customUserDetails;
+		this.cartService=cartService;
+	}
+	
+	@PostMapping("/signup")
+	public ResponseEntity<AuthResponse> createUserHandler(@Valid @RequestBody User user) throws UserException{
+		
+		  	String email = user.getEmail();
+	        String password = user.getPassword();
+	        String firstName=user.getFirstName();
+	        String lastName=user.getLastName();
+	        String role=user.getRole();
+	        
+	        User isEmailExist=userRepository.findByEmail(email);
 
-    @PostMapping("/signup")
-    public ResponseEntity<AuthResponse> createUserHandle(@RequestBody User user) throws UserException {
-        String email = user.getEmail();
-        String password = user.getPassword();
-        String firstName = user.getFirstName();
-        String lastName = user.getLastName();
+	        if (isEmailExist!=null) {
+	        	
+	            throw new UserException("Email Is Already Used With Another Account");
+	        }
 
-        User isEmailExist = userRepository.findByEmail(email);
-        if (isEmailExist != null) {
-            throw new UserException("Email is already used with another account");
-        }
+			User createdUser= new User();
+			createdUser.setEmail(email);
+			createdUser.setFirstName(firstName);
+			createdUser.setLastName(lastName);
+	        createdUser.setPassword(passwordEncoder.encode(password));
+	        createdUser.setRole(role);
+	        
+	        User savedUser= userRepository.save(createdUser);
+	        
+	        cartService.createCart(savedUser);
 
-        User createdUser = new User();
-        createdUser.setEmail(email);
-        createdUser.setPassword(passwordEncoder.encode(password));
-        createdUser.setFirstName(firstName);
-        createdUser.setLastName(lastName);
+	        Authentication authentication = new UsernamePasswordAuthenticationToken(email, password);
+	        SecurityContextHolder.getContext().setAuthentication(authentication);
+	        
+	        String token = jwtTokenProvider.generateToken(authentication);
 
-        User savedUser = userRepository.save(createdUser);
-
-        Authentication authentication = new UsernamePasswordAuthenticationToken(savedUser.getEmail(), savedUser.getPassword(), new ArrayList<>());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        String token = jwtProvider.generateToken(authentication);
-
-        AuthResponse authResponse = new AuthResponse();
-        authResponse.setJwt(token);
-        authResponse.setMessage("SignUp Success");
-
-        return new ResponseEntity<>(authResponse, HttpStatus.CREATED);
-    }
-
-    @PostMapping("/signin")
-    public ResponseEntity<AuthResponse> loginUserHandle(@RequestBody LoginRequest loginRequest) {
+	        AuthResponse authResponse= new AuthResponse(token,true);
+			
+	        return new ResponseEntity<AuthResponse>(authResponse,HttpStatus.OK);
+		
+	}
+	
+	@PostMapping("/signin")
+    public ResponseEntity<AuthResponse> signin(@RequestBody LoginRequest loginRequest) {
         String username = loginRequest.getEmail();
         String password = loginRequest.getPassword();
-
+        
+        System.out.println(username +" ----- "+password);
+        
         Authentication authentication = authenticate(username, password);
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        String token = jwtProvider.generateToken(authentication);
-        AuthResponse authResponse = new AuthResponse();
-        authResponse.setJwt(token);
-        authResponse.setMessage("SignIn Success");
-
-        return new ResponseEntity<>(authResponse, HttpStatus.OK);
+        
+        
+        String token = jwtTokenProvider.generateToken(authentication);
+        AuthResponse authResponse= new AuthResponse();
+		
+		authResponse.setStatus(true);
+		authResponse.setJwt(token);
+		
+        return new ResponseEntity<AuthResponse>(authResponse,HttpStatus.OK);
     }
-
-    private Authentication authenticate(String username, String password) {
-        try {
-            UserDetails userDetails = customerUserService.loadUserByUsername(username);
-            if (!passwordEncoder.matches(password, userDetails.getPassword())) {
-                throw new BadCredentialsException("Invalid password");
-            }
-            return new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
-        } catch (Exception e) {
+	
+	private Authentication authenticate(String username, String password) {
+        UserDetails userDetails = customUserDetails.loadUserByUsername(username);
+        
+        System.out.println("sign in userDetails - "+userDetails);
+        
+        if (userDetails == null) {
+        	System.out.println("sign in userDetails - null " + userDetails);
             throw new BadCredentialsException("Invalid username or password");
         }
+        if (!passwordEncoder.matches(password, userDetails.getPassword())) {
+        	System.out.println("sign in userDetails - password not match " + userDetails);
+            throw new BadCredentialsException("Invalid username or password");
+        }
+        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 }
-

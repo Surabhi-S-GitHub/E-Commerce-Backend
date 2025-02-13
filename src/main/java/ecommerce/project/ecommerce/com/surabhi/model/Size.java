@@ -1,19 +1,12 @@
 package ecommerce.project.ecommerce.com.surabhi.model;
 
+import jakarta.persistence.Embeddable;
+import lombok.Data;
+@Embeddable
+@Data
 public class Size {
-  private String name;
-  private int quantity;
-public String getName() {
-    return name;
-}
-public void setName(String name) {
-    this.name = name;
-}
-public int getQuantity() {
-    return quantity;
-}
-public void setQuantity(int quantity) {
-    this.quantity = quantity;
-}
-  
+
+	private String name;
+	private int quantity;
+
 }

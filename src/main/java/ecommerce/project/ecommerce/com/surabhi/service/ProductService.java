@@ -9,28 +9,26 @@ import ecommerce.project.ecommerce.com.surabhi.model.Product;
 import ecommerce.project.ecommerce.com.surabhi.request.CreateProductRequest;
 
 public interface ProductService {
-    Product createProduct(CreateProductRequest req);
+	
+	// only for admin
+	public Product createProduct(CreateProductRequest req) throws ProductException;
+	
+	public String deleteProduct(Long productId) throws ProductException;
+	
+	public Product updateProduct(Long productId,Product product)throws ProductException;
+	
+	public List<Product> getAllProducts();
+	
+	public Product findProductById(Long id) throws ProductException;
+	
+	public List<Product> findProductByCategory(String category);
+	
+	public List<Product> searchProduct(String query);
+	
+	public Page<Product> getAllProduct(String category, List<String>colors, List<String> sizes, Integer minPrice, Integer maxPrice, Integer minDiscount,String sort, String stock, Integer pageNumber, Integer pageSize);
+	
+	public List<Product> recentlyAddedProduct();
+	
+	
 
-    String deleteProduct(Long productId) throws ProductException;
-
-    Product updateProduct(Long productId, Product req) throws ProductException;
-
-    Product findProduct(Long productId) throws ProductException;
-
-    List<Product> findProductById(String category);
-
-    Page<Product> getAllProducts(
-        String category, 
-        List<String> colors, 
-        List<String> sizes, 
-        Integer minPrice, 
-        Integer maxPrice,
-        Integer minDiscount, 
-        String sort, 
-        String stock, 
-        Integer pageNumber, 
-        Integer pageSize
-    );
-
-    Product findProductById(Long productId);
 }

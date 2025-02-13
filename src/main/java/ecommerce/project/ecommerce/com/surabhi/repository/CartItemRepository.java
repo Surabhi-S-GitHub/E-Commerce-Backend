@@ -9,15 +9,8 @@ import ecommerce.project.ecommerce.com.surabhi.model.CartItem;
 import ecommerce.project.ecommerce.com.surabhi.model.Product;
 
 public interface CartItemRepository extends JpaRepository<CartItem, Long>{
-    
 
-    @Query("SELECT ci FROM CartItem ci WHERE ci.cart=:cart AND ci.product=:product AND ci.size=:size AND ci.userId=:userId")
-    public static CartItem isCardItemExist(@Param("cart")Cart cart,
-    @Param("product")Product product,
-    @Param("size")String size,
-    @Param("userId")Long userId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'isCardItemExist'");
-    }
-
+	@Query("SELECT ci From CartItem ci Where ci.cart=:cart And ci.product=:product And ci.size=:size And ci.userId=:userId")
+	public CartItem isCartItemExist(@Param("cart")Cart cart,@Param("product")Product product,@Param("size")String size, @Param("userId")Long userId);
+	
 }

@@ -6,18 +6,18 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.2</version>
+        <version>3.2.2</version>
         <relativePath/>
     </parent>
 
-    <groupId>ecommerce.project</groupId>
+    <groupId>com.surabhi</groupId>
     <artifactId>ecommerce</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>ecommerce</name>
-    <description>E-Commerce Project</description>
+    <description>Demo project for Spring Boot</description>
 
     <properties>
-        <java.version>17</java.version> <!-- Changed to Java 17 for better compatibility -->
+        <java.version>17</java.version>
     </properties>
 
     <dependencies>
@@ -47,11 +47,11 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- MySQL Database Connector -->
+        <!-- MySQL Database Connector (Removed scope) -->
         <dependency>
-            <groupId>com.mysql</groupId>
-            <artifactId>mysql-connector-j</artifactId>
-            <version>8.3.0</version>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.33</version>
         </dependency>
 
         <!-- Testing -->
@@ -66,7 +66,7 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- JWT Authentication (Corrected & Optimized) -->
+        <!-- JWT Authentication -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>
@@ -90,6 +90,33 @@
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20231013</version>
+        </dependency>
+
+        <!-- Razorpay Payment Gateway -->
+        <dependency>
+            <groupId>com.razorpay</groupId>
+            <artifactId>razorpay-java</artifactId>
+            <version>1.4.3</version>
+        </dependency>
+
+        <!-- Swagger UI -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.1.0</version>
+        </dependency>
+
+        <!-- Lombok (Fixed scope issue) -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.36</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.36</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
