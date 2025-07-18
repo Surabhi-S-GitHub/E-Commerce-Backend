@@ -16,31 +16,46 @@ A full-stack e-commerce platform built with React (frontend), Spring Boot (backe
 
 🛠️ Tech Stack
 
-Layer Technologies
+Layer	Technologies
 
-Frontend React.js, React Router, Axios
+Frontend	React.js, React Router, Axios
 
-Backend Spring Boot (Java)
+Backend	Spring Boot (Java)
 
-Database MySQL
+Database	MySQL
 
-State & Styling React Context / CSS / Styled Components
+State & Styling	React Context / CSS / Styled Components
 
-🔧 Getting Started Backend Clone and navigate:
+🔧 Getting Started
+Backend
+Clone and navigate:
 
-bash Copy Edit git clone https://github.com/Surabhi-S-GitHub/E-commerce-backend.git cd E-commerce-backend Configure MySQL credentials in application.properties.
+git clone https://github.com/Surabhi-S-GitHub/E-commerce-backend.git
+cd E-commerce-backend
+Configure MySQL credentials in application.properties.
 
 Run:
 
-bash Copy Edit mvn spring-boot:run Frontend Clone and navigate:
+mvn spring-boot:run
 
-bash Copy Edit git clone https://github.com/Surabhi-S-GitHub/E-commerce-frontend.git cd E-commerce-frontend Install dependencies:
+Frontend
+Clone and navigate:
 
-bash Copy Edit npm install Run frontend:
+git clone https://github.com/Surabhi-S-GitHub/E-commerce-frontend.git
 
-bash Copy Edit npm start Visit http://localhost:3000 in your browser.
+cd E-commerce-frontend
 
-🧪 Usage Browse products from the catalog.
+Install dependencies:
+
+npm install
+
+Run frontend:
+
+npm start
+Visit http://localhost:3000 in your browser.
+
+🧪 Usage
+Browse products from the catalog.
 
 Apply filters (size, color, price) to find your desired items.
 
@@ -50,22 +65,25 @@ Visit the Cart page to view or update items.
 
 Checkout to simulate placing an order.
 
-📦 Additional Scripts Command Description npm start Start React development server npm run build Build React for production mvn test Run Java unit tests mvn spring-boot:run Launch Spring backend
+📦 Additional Scripts
+Command	Description
+npm start	Start React development server
+npm run build	Build React for production
+mvn test	Run Java unit tests
+mvn spring-boot:run	Launch Spring backend
 
-👤 Author Surabhi S
+👤 Author
+Surabhi S
 
 GitHub: Surabhi-S-GitHub
 
 🎓 Building projects to showcase full-stack web development skills
 
-📝 License This project is licensed under the MIT License – see the LICENSE file for details.
-
-👷 Future Enhancements 🔑 User Authentication (login/register)
-
-💳 Payment integration (Stripe/Razorpay)
+Future Enhancements: 
 
 📦 Admin dashboard for product/order management
 
 💬 Product reviews and ratings
 
 📄 Order history & user profiles
+
